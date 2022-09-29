@@ -23,6 +23,6 @@ public class Location {
         this.col = col;
     }
     public String toString() {
-        return row+", "+col;
+        return "("+row+", "+col+")";
     }
 }

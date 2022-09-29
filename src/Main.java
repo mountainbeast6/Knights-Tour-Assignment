@@ -28,11 +28,14 @@ public class Main {
         System.out.println("Start Loc is " + startLoc);
         stack.push(startLoc);
         visited[startLoc.getRow()][startLoc.getCol()] = true;
-
-        while(stack.size() != rowL * colL && stack.size() != 0)
-        {
-
-
+        printBoard();
+        addToExhausted(new Location(1,1), new Location(1,2));
+        System.out.println("cleared 1, 1");
+        clearExhausted(new Location(1,1));
+        printExhausedList(new Location(1,1));
+        printPossibleMoveLocations(new Location(1,1));
+        while(stack.size() != rowL * colL && stack.size() != 0){
+            break;
         }
 
 
@@ -41,16 +44,20 @@ public class Main {
     /*
      * Printed out the exhausted list for a given Location
      */
-    public static void printExhausedList(Location loc)
-    {
-        
+    public static void printExhausedList(Location loc) {
+        for(int i=0; i<exhausted.get(convertLocToIndex(loc)).size();i++){
+            System.out.print(exhausted.get(convertLocToIndex(loc)).get(i));
+        }
     }
 
     /*
      * Prints out the possible move locations for a given Location
      */
     public static void printPossibleMoveLocations(Location loc) {
-
+        ArrayList list = getPossibleMoves(loc);
+        for(int i=0; i<list.size();i++){
+            System.out.print(list.get(i)+" ");
+        }
     }
 
     /*
@@ -58,7 +65,12 @@ public class Main {
      */
     public static void printBoard()
     {
-        for(int i=0; i=)
+        for(int i=0; i<colL; i++){
+            for(int j=0; j<rowL; j++){
+                System.out.print(board[i][j]+" ");
+            }
+            System.out.println();
+        }
     }
 
     /*
@@ -73,27 +85,31 @@ public class Main {
      * clear out the exhausted list for a given Location
      * This needs to be done everytime a Location is removed from the Stack
      */
-    public static void clearExhausted(Location loc)
-    {
-
+    public static void clearExhausted(Location loc) {
+        for(int i=0; i<exhausted.get(convertLocToIndex(loc)).size();i++){
+            exhausted.get(convertLocToIndex(loc)).remove(0);
+        }
     }
 
     /*
      * set up the exhausted list with empty exhuasted lists.
      */
-    public static void initExhausted()
-    {
+    public static void initExhausted() {
         for(int i=0;i<colL*rowL;i++)
             exhausted.add(new ArrayList<Location>());
     }
     /*
      * is this dest Location exhausted from the source Location
      */
-    public static boolean inExhausted(Location source, Location dest)
-    {
-        return false;
+    public static boolean inExhausted(Location source, Location dest) {
+        boolean isExhausted = false;
+        for (int i =0; i<exhausted.get(convertLocToIndex(source)).size()&&!isExhausted;i++){
+            if(exhausted.get(convertLocToIndex(source)).get(i).getCol()==dest.getCol()&&exhausted.get(convertLocToIndex(source)).get(i).getRow()==dest.getRow()){
+                isExhausted =true;
+            }
+        }
+        return isExhausted;
     }
-
     /*
      * returns the next valid move for a given Location on a given ArrayList of possible moves
      */
@@ -113,16 +129,14 @@ public class Main {
     /*
      * adds a dest Location in the exhausted list for the source Location
      */
-    public static void addToExhausted(Location source, Location dest)
-    {
-
+    public static void addToExhausted(Location source, Location dest) {
+        exhausted.get(convertLocToIndex(source)).add(dest);
     }
 
     /*
      * is this Location a valid one
      */
-    public static boolean isValid(Location loc)
-    {
+    public static boolean isValid(Location loc) {
         return loc.getCol() <= colL && loc.getRow() <= rowL && loc.getRow() >= 0 && loc.getCol() >= 0;
     }
 
@@ -130,9 +144,22 @@ public class Main {
      * returns another Location for the knight to move in.  If no more possible move
      * locations exist from Location loc, then return null
      */
-    public static ArrayList<Location> getPossibleMoves(Location loc)
-    {
-        return null;
+    public static ArrayList<Location> getPossibleMoves(Location loc) {
+        ArrayList<Location> list = new ArrayList<>();
+        list.add(new Location(loc.getCol()+1,loc.getRow()+2));
+        list.add(new Location(loc.getCol()-1,loc.getRow()+2));
+        list.add(new Location(loc.getCol()+1,loc.getRow()-2));
+        list.add(new Location(loc.getCol()-1,loc.getRow()-2));
+        list.add(new Location(loc.getCol()+2,loc.getRow()+1));
+        list.add(new Location(loc.getCol()+2,loc.getRow()-1));
+        list.add(new Location(loc.getCol()-2,loc.getRow()+1));
+        list.add(new Location(loc.getCol()-2,loc.getRow()-1));
+        for(int i=7; i>=0;i--){
+            if(!isValid(list.get(i))){
+                list.remove(i);
+            }
+        }
+        return list;
     }
 
 
@@ -142,6 +169,7 @@ public class Main {
     public static void obtainStartLoc()
     {
         startLoc=new Location(0,0);
+        board[startLoc.getCol()][startLoc.getRow()]=1;
     }
 
 }
