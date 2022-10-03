@@ -9,8 +9,8 @@ import javax.swing.JOptionPane;
 
 public class Main {
 
-    final static int rowL = 5;//number of rows for chess board
-    final static int colL = 5;//number of cols for chess board
+    final static int rowL = 8;//number of rows for chess board
+    final static int colL = 8;//number of cols for chess board
     static Stack<Location> stack = new Stack<Location>(); //store moves in order (backtrack capability)
 
     //list of exhausted locations for each location.  Must use method convertLocToIndex to find a Locations proper index
@@ -44,13 +44,16 @@ public class Main {
             Location top =stack.peek();
             Location temp =getNextMove(top,getPossibleMoves(top));
             if(temp!=null){
-                exhausted.get(convertLocToIndex(top)).add(temp);
+                addToExhausted(top, temp);
                 stack.push(temp);
-                board[temp.getRow()][temp.getCol()]=stack.size();
+                board[temp.getCol()][temp.getRow()]=stack.size();
+                /*
                 printBoard();
                 printPossibleMoveLocations(top);
+                */
+
             }else{
-                board[top.getRow()][top.getCol()]=0;
+                board[top.getCol()][top.getRow()]=0;
                 clearExhausted(stack.pop());
             }
         }
@@ -140,26 +143,26 @@ public class Main {
      */
     public static Location getNextMove(Location loc, ArrayList<Location> list) {
         Location sending=null;
-        int inter=0;
+        int inter=12;
         for(int i=0; i<list.size();i++){
-            boolean send=true;
+            boolean send=false;
             boolean blue;
             if(!inExhausted(loc, list.get(i))){
-                for (int j=0; j<stack.size();j++) {
-                    Location listener=list.get(i);
+                for (int j=0; j<stack.size()&&!send;j++) {
                     send = !(stack.get(j).getCol() == list.get(i).getCol() && (stack.get(j)).getRow() == list.get(i).getRow());
-                    blue = (board[(list.get(i).getRow())][(list.get(i).getCol())] == 0);
+                }
+                    Location listener=list.get(i);
+                    blue = (board[(listener.getCol())][(listener.getRow())] == 0);
                     if (send && blue) {
                         inter = i;
-                        break;
                     }
-                }
-                if(send){
+                if(inter!=12){
                     sending=list.get(inter);
                     break;
                 }
             }
         }
+
         return sending;
     }
 
