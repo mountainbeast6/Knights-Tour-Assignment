@@ -9,8 +9,8 @@ import javax.swing.JOptionPane;
 
 public class Main {
 
-    final static int rowL = 8;//number of rows for chess board
-    final static int colL = 8;//number of cols for chess board
+    final static int rowL = 6;//number of rows for chess board
+    final static int colL = 6;//number of cols for chess board
     static Stack<Location> stack = new Stack<Location>(); //store moves in order (backtrack capability)
 
     //list of exhausted locations for each location.  Must use method convertLocToIndex to find a Locations proper index
@@ -91,8 +91,8 @@ public class Main {
      * prints out the board (numbers correspond to moves)
      */
     public static void printBoard() {
-        for(int i=0; i<colL; i++){
-            for(int j=0; j<rowL; j++){
+        for(int i=0; i<rowL; i++){
+            for(int j=0; j<colL; j++){
                 System.out.print(board[i][j]+" ");
             }
             System.out.println();
@@ -184,7 +184,7 @@ public class Main {
      * is this Location a valid one
      */
     public static boolean isValid(Location loc) {
-        return loc.getCol() < colL && loc.getRow() < rowL && loc.getRow() >= 0 && loc.getCol() >= 0;
+        return loc.getCol() < rowL && loc.getRow() < colL && loc.getRow() >= 0 && loc.getCol() >= 0;
     }
 
     /*
@@ -193,14 +193,14 @@ public class Main {
      */
     public static ArrayList<Location> getPossibleMoves(Location loc) {
         ArrayList<Location> list = new ArrayList<>();
-        list.add(new Location(loc.getRow()+1,loc.getCol()+2));
-        list.add(new Location(loc.getRow()-1,loc.getCol()+2));
-        list.add(new Location(loc.getRow()+1,loc.getCol()-2));
-        list.add(new Location(loc.getRow()-1,loc.getCol()-2));
         list.add(new Location(loc.getRow()+2,loc.getCol()+1));
         list.add(new Location(loc.getRow()+2,loc.getCol()-1));
         list.add(new Location(loc.getRow()-2,loc.getCol()+1));
         list.add(new Location(loc.getRow()-2,loc.getCol()-1));
+        list.add(new Location(loc.getRow()+1,loc.getCol()+2));
+        list.add(new Location(loc.getRow()-1,loc.getCol()+2));
+        list.add(new Location(loc.getRow()+1,loc.getCol()-2));
+        list.add(new Location(loc.getRow()-1,loc.getCol()-2));
         for(int i=7; i>=0;i--){
             if(!isValid(list.get(i))){
                 list.remove(i);
