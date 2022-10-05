@@ -9,8 +9,8 @@ import javax.swing.JOptionPane;
 
 public class Main {
 
-    final static int rowL = 6;//number of rows for chess board
-    final static int colL = 6;//number of cols for chess board
+    final static int rowL = 8;//number of rows for chess board
+    final static int colL = 8;//number of cols for chess board
     static Stack<Location> stack = new Stack<Location>(); //store moves in order (backtrack capability)
 
     //list of exhausted locations for each location.  Must use method convertLocToIndex to find a Locations proper index
@@ -93,8 +93,9 @@ public class Main {
     public static void printBoard() {
         for(int i=0; i<rowL; i++){
             for(int j=0; j<colL; j++){
-                System.out.print(board[i][j]+" ");
+                System.out.print(board[i][j]+" | ");
             }
+            System.out.println();
             System.out.println();
         }
         System.out.println();
